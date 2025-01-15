@@ -31,4 +31,5 @@ jobs:
       run: kubectl get pods -A
 
     - name: Test Rucio Deployment
+      shell: bash
       run: ./scripts/use-rucio.sh
