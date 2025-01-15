@@ -1,0 +1,35 @@
+name: Test Kubernetes Cluster Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-kubernetes:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Start minikube
+      id: minikube
+      uses: medyagh/setup-minikube@latest
+
+    - name: Test Minikube
+      run: kubectl get pods -A
+
+    - name: Run the Minikube setup script
+      run: yes | ./scripts/setup-minikube.sh
+
+    - name: Deploy Rucio
+      run: ./scripts/deploy-rucio.sh
+
+    - name: Show Rucio Deployment
+      run: kubectl get pods -A
+
+    - name: Test Rucio Deployment
+      shell: bash
+      run: ./scripts/use-rucio.sh
